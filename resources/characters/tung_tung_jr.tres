@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/CharacterData.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = "tung_tung_jr"
+display_name = "Tung Tung Jr."
+rarity = 0
+base_cps = 1.0
+tap_bonus = 1.0
+unlock_cost = 100.0
+merge_result_id = "tung_tung_tung"
+sound_id = "tung_jr"
+description = "Baby version. Just says TUNG."

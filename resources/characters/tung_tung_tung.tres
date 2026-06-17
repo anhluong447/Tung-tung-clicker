@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/CharacterData.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = "tung_tung_tung"
+display_name = "Tung Tung Tung"
+rarity = 1
+base_cps = 15.0
+tap_bonus = 5.0
+unlock_cost = 2000.0
+merge_result_id = "tung_tung_ultra"
+sound_id = "tung_original"
+description = "The original. Sings forever."

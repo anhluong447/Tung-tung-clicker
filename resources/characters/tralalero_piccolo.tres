@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/CharacterData.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = "tralalero_piccolo"
+display_name = "Tralalero Piccolo"
+rarity = 0
+base_cps = 2.0
+tap_bonus = 2.0
+unlock_cost = 200.0
+merge_result_id = "tralalero_tralala"
+sound_id = "tralalero"
+description = "Tiny shark with Adidas legs."

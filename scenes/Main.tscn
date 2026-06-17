@@ -1,0 +1,235 @@
+[gd_scene load_steps=14 format=3]
+
+[ext_resource type="Script" path="res://scripts/Main.gd" id="1_main_script"]
+[ext_resource type="PackedScene" path="res://scenes/ui/HUD.tscn" id="2_hud_scene"]
+[ext_resource type="Script" path="res://scripts/GameCamera.gd" id="3_camera_script"]
+[ext_resource type="PackedScene" path="res://scenes/characters/CharacterSlot.tscn" id="4_char_slot_scene"]
+[ext_resource type="PackedScene" path="res://scenes/ui/OfflinePopup.tscn" id="5_offline_popup_scene"]
+[ext_resource type="PackedScene" path="res://scenes/ui/ShopPanel.tscn" id="6_shop_panel_scene"]
+[ext_resource type="PackedScene" path="res://scenes/ui/QuestPanel.tscn" id="7_quest_panel_scene"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sky"]
+sky_top_color = Color(0.35, 0.1, 0.55, 1)
+sky_horizon_color = Color(0.95, 0.45, 0.6, 1)
+ground_bottom_color = Color(0.15, 0.08, 0.25, 1)
+ground_horizon_color = Color(1.0, 0.65, 0.3, 1)
+
+[sub_resource type="Sky" id="Sky_sky"]
+sky_material = SubResource("ProceduralSkyMaterial_sky")
+
+[sub_resource type="Environment" id="Environment_env"]
+background_mode = 2
+sky = SubResource("Sky_sky")
+ambient_light_source = 2
+ambient_light_color = Color(0.55, 0.45, 0.65, 1)
+ambient_light_energy = 0.6
+tonemap_mode = 2
+glow_enabled = true
+glow_intensity = 0.6
+glow_strength = 1.1
+glow_bloom = 0.15
+glow_blend_mode = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_platform"]
+albedo_color = Color(0.4, 0.2, 0.55, 1)
+metallic = 0.1
+roughness = 0.6
+emission_enabled = true
+emission = Color(0.3, 0.15, 0.45, 1)
+emission_energy_multiplier = 0.3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.08, 0.06, 0.14, 0.95)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_right = 24
+corner_radius_bottom_left = 24
+expand_margin_left = 10.0
+expand_margin_top = 10.0
+expand_margin_right = 10.0
+expand_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel2"]
+bg_color = Color(0.08, 0.06, 0.14, 0.95)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_right = 24
+corner_radius_bottom_left = 24
+expand_margin_left = 10.0
+expand_margin_top = 10.0
+expand_margin_right = 10.0
+expand_margin_bottom = 10.0
+
+[node name="Main" type="Node"]
+script = ExtResource("1_main_script")
+
+[node name="World3D" type="Node3D" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="World3D"]
+environment = SubResource("Environment_env")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="World3D"]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 4, 0)
+light_color = Color(1, 0.92, 0.8, 1)
+light_energy = 1.3
+shadow_enabled = true
+
+[node name="Camera3D" type="Camera3D" parent="World3D"]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 3.5, 6)
+current = true
+script = ExtResource("3_camera_script")
+
+[node name="StagePlatform" type="CSGCylinder3D" parent="World3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+use_collision = true
+radius = 3.5
+height = 1.0
+sides = 32
+material = SubResource("StandardMaterial3D_platform")
+
+[node name="CharacterStage" type="Node3D" parent="World3D"]
+
+[node name="Slot0" parent="World3D/CharacterStage" instance=ExtResource("4_char_slot_scene")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8, 0, -1.8)
+
+[node name="Slot1" parent="World3D/CharacterStage" instance=ExtResource("4_char_slot_scene")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.8)
+slot_index = 1
+
+[node name="Slot2" parent="World3D/CharacterStage" instance=ExtResource("4_char_slot_scene")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8, 0, -1.8)
+slot_index = 2
+
+[node name="Slot3" parent="World3D/CharacterStage" instance=ExtResource("4_char_slot_scene")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8, 0, 0)
+slot_index = 3
+
+[node name="Slot4" parent="World3D/CharacterStage" instance=ExtResource("4_char_slot_scene")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+slot_index = 4
+
+[node name="Slot5" parent="World3D/CharacterStage" instance=ExtResource("4_char_slot_scene")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8, 0, 0)
+slot_index = 5
+
+[node name="Slot6" parent="World3D/CharacterStage" instance=ExtResource("4_char_slot_scene")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8, 0, 1.8)
+slot_index = 6
+
+[node name="Slot7" parent="World3D/CharacterStage" instance=ExtResource("4_char_slot_scene")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.8)
+slot_index = 7
+
+[node name="Slot8" parent="World3D/CharacterStage" instance=ExtResource("4_char_slot_scene")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8, 0, 1.8)
+slot_index = 8
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="TapArea" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+
+[node name="Panels" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ShopPanel" parent="UI/Panels" instance=ExtResource("6_shop_panel_scene")]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 60.0
+offset_right = -20.0
+offset_bottom = -90.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CollectionPanel" type="Panel" parent="UI/Panels"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 60.0
+offset_right = -20.0
+offset_bottom = -90.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="Label" type="Label" parent="UI/Panels/CollectionPanel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -150.0
+offset_top = 20.0
+offset_right = 150.0
+offset_bottom = 50.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 26
+text = "📚 COLLECTION"
+horizontal_alignment = 1
+
+[node name="QuestPanel" parent="UI/Panels" instance=ExtResource("7_quest_panel_scene")]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 60.0
+offset_right = -20.0
+offset_bottom = -90.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SettingsPanel" type="Panel" parent="UI/Panels"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 60.0
+offset_right = -20.0
+offset_bottom = -90.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel2")
+
+[node name="Label" type="Label" parent="UI/Panels/SettingsPanel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -150.0
+offset_top = 20.0
+offset_right = 150.0
+offset_bottom = 50.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 26
+text = "⚙️ SETTINGS"
+horizontal_alignment = 1
+
+[node name="HUD" parent="UI" instance=ExtResource("2_hud_scene")]
+layout_mode = 1
+metadata/_edit_lock_ = true
+
+[node name="OfflinePopup" parent="UI" instance=ExtResource("5_offline_popup_scene")]
+visible = false
+layout_mode = 1

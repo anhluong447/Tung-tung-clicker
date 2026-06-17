@@ -1,0 +1,520 @@
+================================================================
+  TUNG TUNG CLICKER — GODOT MOBILE GAME PLAN
+  Agent Instruction Document v1.0
+  Engine: Godot 4.x | Platform: Android + iOS
+  Visual Style: 3D characters on 2D UI (2.5D hybrid)
+================================================================
+
+----------------------------------------------------------------
+SECTION 1 — CONCEPT OVERVIEW
+----------------------------------------------------------------
+
+Game name: TUNG TUNG CLICKER (working title)
+Genre: Idle Clicker / Collector
+Target: Kids 6–14, casual players, brainrot meme fans
+Platform: Android (primary), iOS (secondary)
+Monetization: AdMob rewarded + interstitial ads, no IAP required
+
+Core loop:
+  Tap screen → earn Sahur Coins
+  Spend coins → unlock new Brainrot characters
+  Each character generates passive income (idle)
+  Merge same characters → evolve to rarer forms
+  Complete quests → earn bonus coins
+  Special events → limited characters
+
+Brainrot factor goals:
+  - Everything makes weird sounds when tapped
+  - Characters do random unhinged animations every few seconds
+  - Background music is remixed Italian/Indo brainrot tracks
+  - Unlock notifications use brainrot catchphrases
+  - Numbers are intentionally absurd (earn 1,000,000 coins/sec)
+
+----------------------------------------------------------------
+SECTION 2 — GODOT PROJECT STRUCTURE
+----------------------------------------------------------------
+
+res://
+├── project.godot
+├── scenes/
+│   ├── main/
+│   │   ├── Main.tscn              # Root scene, loads all managers
+│   │   ├── GameManager.gd
+│   │   └── SaveManager.gd
+│   ├── ui/
+│   │   ├── HUD.tscn               # Coins display, tap area, bottom nav
+│   │   ├── ShopPanel.tscn         # Character unlock shop
+│   │   ├── CollectionPanel.tscn   # All characters grid
+│   │   ├── QuestPanel.tscn        # Daily/weekly quests
+│   │   ├── SettingsPanel.tscn
+│   │   └── AdPromptPopup.tscn     # "Watch ad to get X" popup
+│   ├── characters/
+│   │   ├── CharacterSlot.tscn     # Reusable slot in main area
+│   │   └── CharacterCard.tscn     # Card in collection/shop
+│   └── fx/
+│       ├── CoinParticle.tscn      # Coin burst on tap
+│       ├── TapNumber.tscn         # Floating "+123" on tap
+│       └── UnlockFX.tscn          # Flash + shake on unlock
+├── scripts/
+│   ├── GameManager.gd
+│   ├── SaveManager.gd
+│   ├── AdManager.gd               # AdMob wrapper
+│   ├── CharacterData.gd           # Resource class for characters
+│   ├── UpgradeData.gd
+│   └── QuestManager.gd
+├── resources/
+│   ├── characters/                # CharacterData .tres files
+│   └── upgrades/                  # UpgradeData .tres files
+├── assets/
+│   ├── characters/                # 3D .glb models OR 2D sprite sheets
+│   ├── ui/                        # UI textures, icons
+│   ├── audio/
+│   │   ├── bgm/                   # Background music loops
+│   │   └── sfx/                   # Tap sounds, unlock sounds
+│   └── fonts/
+└── addons/
+    └── admob/                     # Godot AdMob plugin
+
+----------------------------------------------------------------
+SECTION 3 — CHARACTER ROSTER (Brainrot Universe)
+----------------------------------------------------------------
+
+All characters have: name, rarity, base_cps (coins per second),
+tap_bonus, idle_income, unlock_cost, merge_result, sound_id, 
+description (intentionally unhinged lore)
+
+TIER 1 — COMMON (unlock cost: 100–500 coins)
+┌─────────────────────┬──────────┬──────────────────────────────┐
+│ Name                │ CPS      │ Lore                         │
+├─────────────────────┼──────────┼──────────────────────────────┤
+│ Tung Tung Jr.       │ 1        │ Baby version. Just says TUNG │
+│ Tralalero Piccolo   │ 2        │ Tiny shark with Adidas legs  │
+│ Sahur Birb          │ 3        │ Rooster that screams at 3am  │
+│ Bombardino Seed     │ 4        │ Baby croco-bomber. Bald.     │
+│ Cappuccino Dog      │ 5        │ Dog vibing to Italian house  │
+└─────────────────────┴──────────┴──────────────────────────────┘
+
+TIER 2 — UNCOMMON (unlock cost: 2,000–10,000 coins)
+┌─────────────────────┬──────────┬──────────────────────────────┐
+│ Tung Tung Tung      │ 15       │ The original. Sings forever  │
+│ Tralalero Tralala   │ 20       │ Shark with Nike air max on   │
+│ Bombardino Crocodilo│ 25       │ Croco-bomber. Always falling │
+│ Lirilì Larilà       │ 30       │ Elephant on mountain. Calm.  │
+│ Brr Brr Patapim     │ 35       │ Part bird. Part chaos.       │
+└─────────────────────┴──────────┴──────────────────────────────┘
+
+TIER 3 — RARE (unlock cost: 50,000–200,000 coins)
+┌─────────────────────┬──────────┬──────────────────────────────┐
+│ Sahur King          │ 100      │ Wakes entire city. Regal.    │
+│ Glorbo Supreme      │ 120      │ Ancient brainrot deity       │
+│ Trippi Troppi       │ 150      │ Toucan mafia boss            │
+│ Bobritto Bandito    │ 180      │ Beaver who steals your sleep │
+│ Frigo Camelo        │ 200      │ Frozen camel. Why? Nobody knows│
+└─────────────────────┴──────────┴──────────────────────────────┘
+
+TIER 4 — EPIC (unlock cost: 1M–5M coins)
+┌─────────────────────┬──────────┬──────────────────────────────┐
+│ Tung Tung ULTRA     │ 1,000    │ 3x size. Screams in 4K       │
+│ La Vaca Saturno     │ 1,200    │ Saturn-ring cow. Orbits you. │
+│ Il Cacto Magnifico  │ 1,500    │ Giant cactus with sunglasses │
+│ Crocodilo Rex       │ 2,000    │ Evolved Bombardino. Has jets │
+└─────────────────────┴──────────┴──────────────────────────────┘
+
+TIER 5 — LEGENDARY (unlock via merge only or special event)
+┌─────────────────────┬──────────┬──────────────────────────────┐
+│ TUNG TUNG OMEGA     │ 10,000   │ Final form. Black hole eyes. │
+│ Brainrot GOD        │ 50,000   │ All characters merged. Chaos.│
+└─────────────────────┴──────────┴──────────────────────────────┘
+
+MERGE TABLE (same character x2 = next tier version):
+  Tung Tung Jr. x2        → Tung Tung Tung
+  Tung Tung Tung x2       → Tung Tung ULTRA
+  Tung Tung ULTRA x2      → TUNG TUNG OMEGA
+  Bombardino Seed x2      → Bombardino Crocodilo
+  Bombardino Crocodilo x2 → Crocodilo Rex
+  (etc. for all characters)
+
+----------------------------------------------------------------
+SECTION 4 — CORE SYSTEMS
+----------------------------------------------------------------
+
+4.1 TAP SYSTEM
+--------------
+Node: TapArea (Area2D covering main screen center)
+- On tap input: 
+    coins += tap_power (base 1, upgraded later)
+    Spawn CoinParticle at tap position
+    Spawn TapNumber floating label
+    Play random tap SFX from pool (5+ sounds)
+    Call active characters' on_tap() animation trigger
+- tap_power formula:
+    tap_power = base_tap * (1 + tap_upgrade_level * 0.5)
+- Critical tap (5% chance):
+    coins += tap_power * 10
+    Play special SFX
+    Show "TUNG!!" label in big text
+
+4.2 IDLE / PASSIVE INCOME
+--------------------------
+- GameManager runs _process(delta)
+- Every frame: coins += total_cps * delta
+- total_cps = sum of all unlocked characters' cps * global_multiplier
+- global_multiplier starts at 1.0, increased by upgrades
+- Offline earnings:
+    On app resume: calculate time_offline = now - last_save_time
+    Cap at 8 hours max offline earnings
+    Show popup: "You were gone X hours! Earned Y coins!"
+    "Double offline earnings" button → watch rewarded ad
+
+4.3 CHARACTER SLOTS (Main Screen)
+----------------------------------
+- Main screen displays up to 9 character slots in 3x3 grid
+- Each slot shows the 3D/animated character model
+- Characters idle-animate continuously (loop animations)
+- Every 3–8 seconds: random character does "brainrot event"
+  Events:
+    - Plays signature sound clip
+    - Does exaggerated animation (spin, grow big, fall over)
+    - Shows speech bubble with random unhinged quote
+    - Coin burst particle effect
+- Tap any character in slot → bonus tap on that character
+
+4.4 SHOP SYSTEM
+----------------
+Shop has 3 tabs:
+  [CHARACTERS] — unlock new characters with coins
+  [UPGRADES]   — permanent boosts
+  [BOOST]      — temporary x2/x5 multipliers (ad-gated)
+
+Character unlock: 
+    Show locked card with silhouette + "???"
+    Show cost in coins
+    Button: "UNLOCK" or "WATCH AD" (if player is short on coins)
+
+Upgrades list (examples):
+  - Tap Power Lv1→10: +0.5 tap_power each, cost scales x3
+  - Auto-Tap Bot: generates 10% of tap_power passively
+  - Sahur Multiplier: x1.5 all CPS for 10 min (watch ad)
+  - VIP Tapper: double critical tap chance
+  - Offline Vault: extend offline cap to 12h
+
+4.5 QUEST SYSTEM
+-----------------
+Daily quests (reset 00:00 UTC+7):
+  - "Tap 500 times today" → reward: 5,000 coins
+  - "Unlock 1 new character" → reward: 10,000 coins  
+  - "Watch 3 ads" → reward: 50,000 coins + rare character shard
+  - "Earn 1M coins idle" → reward: upgrade voucher
+
+Weekly quest:
+  - "Collect all Tier 2 characters" → reward: Epic character unlock
+  - "Merge 5 times" → reward: 2x global multiplier 30 min
+
+Quest completion popup: big animation, character dances, coins rain
+
+4.6 MERGE SYSTEM
+-----------------
+- Long-press a character slot → drag onto identical character
+- Or: dedicated "MERGE" button in character management screen
+- Show merge preview before confirming
+- Merge animation: two characters spin together → explosion → new one
+- Merged character has same slot, higher tier
+- Play special TUNG TUNG sound on successful merge
+
+----------------------------------------------------------------
+SECTION 5 — AD MONETIZATION IMPLEMENTATION
+----------------------------------------------------------------
+
+5.1 ADMOB SETUP
+----------------
+Plugin: godot-admob-android (github.com/Poing-Studios/godot-admob-android)
+AdManager.gd handles all ad logic centrally.
+
+Ad Unit Types:
+  - Rewarded Video: player chooses to watch
+  - Interstitial: shown automatically at natural breaks
+
+AdManager.gd interface:
+```
+func load_rewarded_ad() -> void
+func show_rewarded_ad(callback: Callable) -> void  # callback(earned: bool)
+func load_interstitial() -> void
+func show_interstitial_if_ready() -> void
+func is_rewarded_ready() -> bool
+```
+
+5.2 REWARDED AD TRIGGERS (voluntary, high eCPM)
+-------------------------------------------------
+These are the main earners. Player WANTS to watch.
+
+Trigger 1 — Double Offline Earnings
+  Context: App resume popup
+  Prompt: "Watch ad to DOUBLE your offline coins!"
+  Reward: offline_coins *= 2
+
+Trigger 2 — Revive / Extra Time
+  Context: Any timed challenge
+  Prompt: "Watch ad to get +30 sec!"
+
+Trigger 3 — Unlock Assist
+  Context: Player is short on coins for unlock
+  Prompt: "Need 500 more coins? Watch a quick ad!"
+  Reward: +500 to +2000 coins depending on character tier
+
+Trigger 4 — Temporary Multiplier
+  Context: Shop BOOST tab
+  Prompt: "Watch ad → x2 ALL earnings for 10 minutes!"
+  Reward: global_multiplier *= 2 for 600 seconds
+  Cooldown: 30 minutes between uses
+
+Trigger 5 — Daily Coin Pack
+  Context: Main screen button, appears every 4 hours
+  Prompt: "FREE 10,000 coins! Watch an ad."
+  Daily cap: 5 times per day
+
+Trigger 6 — Character Shard
+  Context: Locked character card
+  Prompt: "Get 1 shard toward [Character]! Watch ad."
+  Need 10 shards to unlock character for free
+
+5.3 INTERSTITIAL AD TRIGGERS (automatic)
+------------------------------------------
+IMPORTANT: Space these out to avoid annoying players.
+Use a cooldown: minimum 3 minutes between interstitials.
+
+Trigger 1 — After unlock animation completes
+  Show interstitial after the character unlock celebration
+
+Trigger 2 — App return from background
+  If app was background > 5 minutes → show on return
+  (Different from offline earnings popup — separate flow)
+
+Trigger 3 — After completing a quest
+  Show after quest completion animation
+
+Rule: NEVER show interstitial mid-tap session.
+Rule: NEVER show two ads within 3 minutes.
+Rule: Always use AdMob child-directed tag if targeting under 13.
+
+5.4 ADMOB CHILD SAFETY
+------------------------
+In AdManager initialization:
+```
+RequestConfiguration.setTagForChildDirectedTreatment(
+    RequestConfiguration.TAG_FOR_CHILD_DIRECTED_TREATMENT_TRUE
+)
+```
+This ensures family-safe ads only. Required for Play Store family policy.
+
+----------------------------------------------------------------
+SECTION 6 — VISUAL DESIGN SPEC (for 3D/2.5D)
+----------------------------------------------------------------
+
+6.1 CAMERA SETUP
+-----------------
+- Main camera: fixed position, looking down ~30° angle at character stage
+- Characters: 3D models on a flat circular platform
+- UI: 2D CanvasLayer overlay (HUD, buttons, panels)
+- Background: animated looping 3D environment (silly world)
+
+6.2 CHARACTER MODELS
+---------------------
+Style reference: low-poly 3D, bright colors, exaggerated proportions
+- Tung Tung Tung: humanoid stick figure, giant drum, chaotic limbs
+- Tralalero: small cartoon shark body, human legs with sneakers
+- Bombardino: fat crocodile + bomb chest + tiny wings
+- All characters: big heads, small bodies, high-contrast colors
+- Rig requirements: idle loop, tap reaction, happy dance, merge exit
+
+If using 2D instead: 
+  Use spine2D-style animation or Godot AnimatedSprite2D
+  Spritesheet with 4 animations: idle, tap, dance, merge
+
+6.3 ENVIRONMENT
+----------------
+Main stage: floating island in space
+  - Stars and planets in background
+  - Platform is checkered/cartoon with glowing edges
+  - Small decorations unlock as player progresses (trophies, flags)
+
+Background sky: animated gradient, slowly rotating planets
+  - Planet 1: has Tung Tung Tung's face on it
+  - Planet 2: Bombardino flying around it
+
+6.4 UI STYLE
+-------------
+Font: Bold rounded (Fredoka One or Nunito Black)
+Primary color: #FF6B35 (orange) 
+Secondary color: #FFE135 (yellow)
+Accent: #7B2FBE (purple)
+Background UI panels: dark semi-transparent with rounded corners
+Coin icon: spinning gold coin with Tung face engraved
+All buttons: large tap targets (min 80x80px), satisfying press animation
+
+6.5 AUDIO
+----------
+BGM: 
+  - Track 1: remixed "Tung Tung Sahur" loop (upbeat, loopable)
+  - Track 2: Italian phonk idle track
+  - Tracks crossfade based on activity level
+
+SFX pool (play randomly on tap):
+  - "TUNG!" 
+  - "Tralalalerooo"
+  - Cash register ding
+  - Silly boing
+  - "Sahuurr!"
+  - Fart sound (kids love this)
+
+Unlock SFX: big orchestral hit + "OHHH" crowd reaction
+Merge SFX: explosion + "MAGNIFICOOO"
+
+----------------------------------------------------------------
+SECTION 7 — SAVE SYSTEM
+----------------------------------------------------------------
+
+SaveManager.gd — saves to user://save.json
+
+Save data structure:
+```json
+{
+  "version": 1,
+  "coins": 12345,
+  "lifetime_coins": 99999,
+  "tap_power": 5,
+  "tap_level": 3,
+  "global_multiplier": 1.0,
+  "multiplier_end_time": 0,
+  "last_save_timestamp": 1720000000,
+  "characters_unlocked": ["tung_jr", "tung_tung", "bombardino_seed"],
+  "characters_in_slots": ["tung_tung", "tung_tung", "bombardino_seed", null, null, null, null, null, null],
+  "shards": {"tralalero": 3, "lirilì": 7},
+  "upgrades": {"tap_level": 3, "auto_tap": true, "offline_vault": false},
+  "quests_completed_today": ["tap_500", "watch_3_ads"],
+  "last_quest_reset": "2024-07-04",
+  "ads_watched_today": 3,
+  "last_interstitial_time": 1720000000,
+  "stats": {
+    "total_taps": 4521,
+    "total_merges": 12,
+    "total_ads_watched": 47
+  }
+}
+```
+
+Auto-save: every 30 seconds + on app pause/quit
+Load: on Main.gd _ready()
+Verify integrity: check version, fill missing fields with defaults
+
+----------------------------------------------------------------
+SECTION 8 — SCENE FLOW / NAVIGATION
+----------------------------------------------------------------
+
+App Start
+    ↓
+Splash Screen (2 sec, play Tung Tung audio sting)
+    ↓
+Main.tscn (persistent scene)
+    ├── HUD always visible
+    │   ├── Top: coin counter (animated counting up)
+    │   ├── Top: CPS display ("♦ 1,234/sec")
+    │   └── Bottom nav: [CLICKER] [SHOP] [COLLECTION] [QUESTS]
+    ├── Center: CharacterStage (3D viewport or 2D stage)
+    └── Panels (show/hide on nav tap):
+        ├── ShopPanel
+        ├── CollectionPanel  
+        ├── QuestPanel
+        └── SettingsPanel
+
+Popups (float above everything):
+    - OfflineEarningsPopup (on resume)
+    - UnlockCelebrationPopup
+    - QuestCompletePopup
+    - AdPromptPopup
+
+----------------------------------------------------------------
+SECTION 9 — PROGRESSION MILESTONES
+----------------------------------------------------------------
+
+The game should feel like a constant drip of rewards:
+
+Milestone 1 — First minute:
+  Player has Tung Jr, earns first 100 coins, unlocks Tung Tung Tung
+  → First interstitial ad trigger
+
+Milestone 2 — 5 minutes in:
+  Has 3 characters, discovers merge, first rewarded ad offer
+  → Hook established
+
+Milestone 3 — 30 minutes in:
+  Has full 9-slot grid, first Rare unlocked
+  → Idle income kicks in, player checks back every few hours
+
+Milestone 4 — Day 2:
+  Offline earnings popup → first "double earnings" rewarded ad
+  → Rewarded ad habit formed
+
+Milestone 5 — Week 1:
+  First Epic character, first merge chain to Tier 4
+  → Player sharing game with friends ("look at this weird game")
+
+----------------------------------------------------------------
+SECTION 10 — AGENT IMPLEMENTATION ORDER
+----------------------------------------------------------------
+
+Build in this order to always have a playable build:
+
+Step 1: Project setup, Main.tscn, HUD with coin counter
+Step 2: Tap system (click → coins), CoinParticle, TapNumber FX
+Step 3: CharacterData resource, 3 placeholder characters (cubes ok)
+Step 4: CharacterSlot scene, place 3 characters on stage
+Step 5: Idle income (_process loop), CPS display
+Step 6: ShopPanel with buy buttons, SaveManager basic save/load
+Step 7: Upgrade system (tap power upgrades in shop)
+Step 8: Merge system
+Step 9: Quest system (3 daily quests)
+Step 10: AdManager stub (prints to console, no real ads yet)
+Step 11: Offline earnings calculation + popup
+Step 12: Polish — real character art/models, audio, particles
+Step 13: Replace AdManager stub with real AdMob plugin
+Step 14: Android export, test on device
+
+----------------------------------------------------------------
+SECTION 11 — ANTI-PATTERNS TO AVOID
+----------------------------------------------------------------
+
+DO NOT:
+  - Show ads during active tap session (kills feel)
+  - Show interstitials more than once per 3 min
+  - Make offline earnings popup skippable without interaction
+    (players will tap through without seeing the ad offer)
+  - Use paywalled characters (everything earnable with time/ads)
+  - Block gameplay with mandatory ads (Play Store policy violation)
+  - Store coins as simple int (will overflow — use float or BigNumber)
+
+DO:
+  - Always preload next ad while current one plays
+  - Cache AdMob ad units in AdManager singleton
+  - Test with test ad unit IDs during development
+  - Handle no-internet state gracefully (skip ads silently)
+  - Log ad events to understand which triggers convert best
+
+----------------------------------------------------------------
+SECTION 12 — PLACEHOLDER ASSETS FOR DEVELOPMENT
+----------------------------------------------------------------
+
+Until real art is ready, use these placeholders:
+  Characters: colored capsule meshes with emoji texture
+    - Tung Tung: orange capsule, 🥁 texture
+    - Bombardino: green capsule, 💣 texture
+    - Tralalero: blue capsule, 🦈 texture
+
+Sounds: free from freesound.org
+  - Search: "cartoon boing", "cash register", "crowd cheer"
+
+UI icons: use Kenney.nl free UI pack
+Font: Fredoka One (Google Fonts, free)
+
+----------------------------------------------------------------
+END OF DOCUMENT
+================================================================

@@ -1,0 +1,295 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/HUD.gd" id="1_hud_script"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_top"]
+bg_color = Color(0.08, 0.16, 0.32, 0.95)
+border_width_bottom = 4
+border_color = Color(0.0, 0.35, 0.65, 0.8)
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_avatarbg"]
+bg_color = Color(0.1, 0.25, 0.5, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 4
+border_color = Color(0.2, 0.65, 0.95, 1)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+content_margin_left = 6.0
+content_margin_right = 6.0
+content_margin_top = 6.0
+content_margin_bottom = 6.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_starbg"]
+bg_color = Color(1, 0.65, 0, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 2
+border_color = Color(0.65, 0.3, 0, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_capsbg"]
+bg_color = Color(0.05, 0.08, 0.16, 0.7)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 2
+border_color = Color(0.1, 0.3, 0.6, 0.6)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+content_margin_left = 8.0
+content_margin_right = 4.0
+content_margin_top = 3.0
+content_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bottom"]
+bg_color = Color(0.05, 0.08, 0.18, 0.96)
+border_width_top = 4
+border_color = Color(0.0, 0.4, 0.75, 0.7)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+
+[node name="HUD" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_hud_script")
+
+[node name="TopBar" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 110.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_top")
+
+[node name="HBox" type="HBoxContainer" parent="TopBar"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="ProfileContainer" type="Control" parent="TopBar/HBox"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="AvatarFrame" type="PanelContainer" parent="TopBar/HBox/ProfileContainer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_avatarbg")
+
+[node name="Emoji" type="Label" parent="TopBar/HBox/ProfileContainer/AvatarFrame"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "🐓"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="StarLevel" type="PanelContainer" parent="TopBar/HBox/ProfileContainer"]
+custom_minimum_size = Vector2(28, 24)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -26.0
+offset_top = -22.0
+offset_right = 2.0
+offset_bottom = 2.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_starbg")
+
+[node name="LevelLabel" type="Label" parent="TopBar/HBox/ProfileContainer/StarLevel"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 12
+text = "14"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CurrenciesVBox" type="VBoxContainer" parent="TopBar/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="GemContainer" type="HBoxContainer" parent="TopBar/HBox/CurrenciesVBox"]
+layout_mode = 2
+alignment = 2
+
+[node name="Capsule" type="PanelContainer" parent="TopBar/HBox/CurrenciesVBox/GemContainer"]
+custom_minimum_size = Vector2(160, 32)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_capsbg")
+
+[node name="HBox" type="HBoxContainer" parent="TopBar/HBox/CurrenciesVBox/GemContainer/Capsule"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Icon" type="Label" parent="TopBar/HBox/CurrenciesVBox/GemContainer/Capsule/HBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "💎"
+vertical_alignment = 1
+
+[node name="GemLabel" type="Label" parent="TopBar/HBox/CurrenciesVBox/GemContainer/Capsule/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 14
+text = "1,245"
+vertical_alignment = 1
+
+[node name="AddButton" type="Button" parent="TopBar/HBox/CurrenciesVBox/GemContainer/Capsule/HBox"]
+custom_minimum_size = Vector2(26, 26)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 14
+text = "+"
+
+[node name="CoinContainer" type="HBoxContainer" parent="TopBar/HBox/CurrenciesVBox"]
+layout_mode = 2
+alignment = 2
+
+[node name="Capsule" type="PanelContainer" parent="TopBar/HBox/CurrenciesVBox/CoinContainer"]
+custom_minimum_size = Vector2(160, 32)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_capsbg")
+
+[node name="HBox" type="HBoxContainer" parent="TopBar/HBox/CurrenciesVBox/CoinContainer/Capsule"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Icon" type="Label" parent="TopBar/HBox/CurrenciesVBox/CoinContainer/Capsule/HBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "🪙"
+vertical_alignment = 1
+
+[node name="CoinLabel" type="Label" parent="TopBar/HBox/CurrenciesVBox/CoinContainer/Capsule/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 0.95, 0.4, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 14
+text = "0"
+vertical_alignment = 1
+
+[node name="AddButton" type="Button" parent="TopBar/HBox/CurrenciesVBox/CoinContainer/Capsule/HBox"]
+custom_minimum_size = Vector2(26, 26)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 14
+text = "+"
+
+[node name="CPSLabel" type="Label" parent="TopBar/HBox"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.3, 0.85, 1.0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 13
+text = "Income:
+0/s"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MultiplierLabel" type="Label" parent="TopBar"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_colors/font_color = Color(1, 0.3, 0.8, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 13
+text = "🔥 2X BOOST! 🔥"
+
+[node name="BottomNav" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -90.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_bottom")
+
+[node name="HBox" type="HBoxContainer" parent="BottomNav"]
+layout_mode = 2
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="ShopButton" type="Button" parent="BottomNav/HBox"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 12
+text = "🛒
+Shop"
+
+[node name="CollectionButton" type="Button" parent="BottomNav/HBox"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 12
+text = "📚
+Album"
+
+[node name="ClickerButton" type="Button" parent="BottomNav/HBox"]
+custom_minimum_size = Vector2(0, 78)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 13
+text = "🎮
+Tap!"
+
+[node name="QuestButton" type="Button" parent="BottomNav/HBox"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 12
+text = "⭐
+Quests"
+
+[node name="SettingsButton" type="Button" parent="BottomNav/HBox"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 12
+text = "⚙️
+Set"
