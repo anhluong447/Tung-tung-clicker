@@ -26,3 +26,11 @@ signal ad_failed(ad_type: String)
 # Save/Offline System
 signal offline_earnings_ready(amount: float, seconds_offline: float)
 signal game_saved()
+
+# My Talking Tom / Brainrot Overhaul Signals
+signal player_level_up(new_level: int)
+signal xp_changed(current_xp: float, max_xp: float)
+signal mood_changed(hype: float, chaos: float, brainrot: float)
+signal combo_triggered(combo_count: int, combo_name: String)
+signal toast_notification(message: String)
+

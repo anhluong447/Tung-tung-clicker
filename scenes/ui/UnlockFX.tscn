@@ -1,0 +1,151 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/UnlockFX.gd" id="1_unlock_fx_script"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
+bg_color = Color(0.12, 0.08, 0.2, 0.98)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 12
+border_color = Color(1, 0.84, 0.0, 1)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+shadow_color = Color(0, 0, 0, 0.6)
+shadow_size = 12
+
+[sub_resource type="Gradient" id="Gradient_confetti"]
+offsets = PackedFloat32Array(0, 0.25, 0.5, 0.75, 1)
+colors = PackedColorArray(1, 0.2, 0.2, 1, 1, 0.8, 0, 1, 0, 0.9, 1, 1, 0.8, 0.2, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn"]
+bg_color = Color(0.2, 0.75, 0.15, 1)
+border_width_bottom = 4
+border_color = Color(0.1, 0.45, 0.08, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[node name="UnlockFX" type="CanvasLayer"]
+layer = 5
+script = ExtResource("1_unlock_fx_script")
+
+[node name="Overlay" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.5)
+
+[node name="ConfettiLeft" type="CPUParticles2D" parent="."]
+position = Vector2(80, -20)
+emitting = false
+amount = 45
+lifetime = 2.5
+one_shot = true
+explosiveness = 0.8
+direction = Vector2(0.3, 1)
+spread = 35.0
+gravity = Vector2(0, 280)
+initial_velocity_min = 180.0
+initial_velocity_max = 350.0
+angular_velocity_min = 50.0
+angular_velocity_max = 200.0
+scale_amount_min = 10.0
+scale_amount_max = 20.0
+color_ramp = SubResource("Gradient_confetti")
+
+[node name="ConfettiRight" type="CPUParticles2D" parent="."]
+position = Vector2(640, -20)
+emitting = false
+amount = 45
+lifetime = 2.5
+one_shot = true
+explosiveness = 0.8
+direction = Vector2(-0.3, 1)
+spread = 35.0
+gravity = Vector2(0, 280)
+initial_velocity_min = 180.0
+initial_velocity_max = 350.0
+angular_velocity_min = 50.0
+angular_velocity_max = 200.0
+scale_amount_min = 10.0
+scale_amount_max = 20.0
+color_ramp = SubResource("Gradient_confetti")
+
+[node name="Card" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(320, 380)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -200.0
+offset_right = 160.0
+offset_bottom = 180.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(160, 190)
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="VBox" type="VBoxContainer" parent="Card"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="Title" type="Label" parent="Card/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1.0, 0.9, 0.1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 20
+text = "✨ UNLOCKED! ✨"
+horizontal_alignment = 1
+
+[node name="EmojiFrame" type="Label" parent="Card/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 80
+text = "🐓"
+horizontal_alignment = 1
+
+[node name="Name" type="Label" parent="Card/VBox"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 22
+text = "TUNG TUNG"
+horizontal_alignment = 1
+
+[node name="Stats" type="Label" parent="Card/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 0.85, 1.0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 14
+text = "Tốc độ sản sinh: +5.0/s"
+horizontal_alignment = 1
+
+[node name="AwesomeBtn" type="Button" parent="Card/VBox"]
+custom_minimum_size = Vector2(160, 48)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+text = "QUÁ TUYỆT VỜI! 🤪"
+
+[node name="Flash" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(1, 1, 1, 0)

@@ -67,6 +67,10 @@ func _process(delta):
 	time_passed += delta
 	mesh_pivot.position.y = base_y + sin(time_passed * idle_bob_speed) * idle_bob_height
 	mesh_pivot.rotate_y(0.3 * delta) # Slightly faster rotation
+	
+	# Squishy cartoon breathing
+	var scale_val = 1.0 + sin(time_passed * idle_bob_speed * 1.5) * 0.04
+	mesh_pivot.scale = Vector3(scale_val, 1.0 / scale_val, scale_val)
 
 func update_slot():
 	# Check if GameManager has a character in this slot

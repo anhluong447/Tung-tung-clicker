@@ -47,6 +47,8 @@ func save_game():
 	var save_data = {
 		"version": "1.0",
 		"last_save_time": Time.get_unix_time_from_system(),
+		"player_level": GameManager.player_level,
+		"player_xp": GameManager.player_xp,
 		"coins": GameManager.coins,
 		"characters_in_slots": GameManager.characters_in_slots,
 		"characters_unlocked": GameManager.characters_unlocked,
@@ -114,6 +116,10 @@ func load_game() -> Dictionary:
 
 func _apply_save_data_to_game(data: Dictionary):
 	# Core metrics
+	if data.has("player_level"):
+		GameManager.player_level = int(data["player_level"])
+	if data.has("player_xp"):
+		GameManager.player_xp = float(data["player_xp"])
 	if data.has("coins"):
 		GameManager.coins = float(data["coins"])
 		

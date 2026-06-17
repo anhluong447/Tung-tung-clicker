@@ -1,11 +1,18 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://scripts/HUD.gd" id="1_hud_script"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_top"]
-bg_color = Color(0.08, 0.16, 0.32, 0.95)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_top_base"]
+bg_color = Color(0.18, 0.08, 0.32, 0.95)
 border_width_bottom = 4
-border_color = Color(0.0, 0.35, 0.65, 0.8)
+border_color = Color(0.12, 0.05, 0.22, 1)
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_top_gradient"]
+bg_color = Color(0.05, 0.22, 0.45, 0.5)
+border_width_bottom = 4
+border_color = Color(0.0, 0.4, 0.8, 0.6)
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
 
@@ -26,16 +33,16 @@ content_margin_top = 6.0
 content_margin_bottom = 6.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_starbg"]
-bg_color = Color(1, 0.65, 0, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 2
-border_color = Color(0.65, 0.3, 0, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
+bg_color = Color(1, 0.72, 0.0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 4
+border_color = Color(0.65, 0.35, 0, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_capsbg"]
 bg_color = Color(0.05, 0.08, 0.16, 0.7)
@@ -52,6 +59,28 @@ content_margin_left = 8.0
 content_margin_right = 4.0
 content_margin_top = 3.0
 content_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xp_bg"]
+bg_color = Color(0.05, 0.08, 0.14, 1)
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 0.5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xp_fill"]
+bg_color = Color(0.0, 0.85, 1.0, 1)
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mood_bg"]
+bg_color = Color(0.05, 0.05, 0.1, 0.75)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 0.8)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bottom"]
 bg_color = Color(0.05, 0.08, 0.18, 0.96)
@@ -74,9 +103,13 @@ script = ExtResource("1_hud_script")
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 110.0
+offset_bottom = 108.0
 grow_horizontal = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_top")
+theme_override_styles/panel = SubResource("StyleBoxFlat_top_base")
+
+[node name="GradientOverlay" type="Panel" parent="TopBar"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_top_gradient")
 
 [node name="HBox" type="HBoxContainer" parent="TopBar"]
 layout_mode = 2
@@ -105,27 +138,28 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="StarLevel" type="PanelContainer" parent="TopBar/HBox/ProfileContainer"]
-custom_minimum_size = Vector2(28, 24)
+custom_minimum_size = Vector2(36, 28)
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -26.0
-offset_top = -22.0
-offset_right = 2.0
-offset_bottom = 2.0
+offset_left = -28.0
+offset_top = -24.0
+offset_right = 8.0
+offset_bottom = 4.0
 grow_horizontal = 0
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_starbg")
 
 [node name="LevelLabel" type="Label" parent="TopBar/HBox/ProfileContainer/StarLevel"]
 layout_mode = 2
+theme_override_colors/font_color = Color(1.0, 0.95, 0.3, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 12
-text = "14"
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 13
+text = "Lv.1"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -140,7 +174,7 @@ layout_mode = 2
 alignment = 2
 
 [node name="Capsule" type="PanelContainer" parent="TopBar/HBox/CurrenciesVBox/GemContainer"]
-custom_minimum_size = Vector2(160, 32)
+custom_minimum_size = Vector2(150, 32)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_capsbg")
@@ -177,7 +211,7 @@ layout_mode = 2
 alignment = 2
 
 [node name="Capsule" type="PanelContainer" parent="TopBar/HBox/CurrenciesVBox/CoinContainer"]
-custom_minimum_size = Vector2(160, 32)
+custom_minimum_size = Vector2(150, 32)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_capsbg")
@@ -222,16 +256,117 @@ text = "Income:
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="MultiplierLabel" type="Label" parent="TopBar"]
-visible = false
+[node name="XPBar" type="ProgressBar" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 108.0
+offset_bottom = 114.0
+grow_horizontal = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_xp_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_xp_fill")
+max_value = 100.0
+value = 45.0
+show_percentage = false
+
+[node name="CoinPopAnchor" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 80.0
+offset_top = 74.0
+offset_right = 80.0
+offset_top = 74.0
+grow_horizontal = 2
+
+[node name="MoodMeters" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 18.0
+offset_top = -220.0
+offset_right = 118.0
+offset_bottom = -70.0
+grow_vertical = 2
+theme_override_constants/separation = 12
+
+[node name="HypeBox" type="VBoxContainer" parent="MoodMeters"]
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 8
-theme_override_colors/font_color = Color(1, 0.3, 0.8, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
-theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 13
-text = "🔥 2X BOOST! 🔥"
+theme_override_constants/separation = 2
+
+[node name="Label" type="Label" parent="MoodMeters/HypeBox"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 10
+text = "🔥 HYPE"
+
+[node name="Bar" type="ProgressBar" parent="MoodMeters/HypeBox"]
+custom_minimum_size = Vector2(80, 10)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_styles/background = SubResource("StyleBoxFlat_mood_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_xp_fill")
+value = 50.0
+show_percentage = false
+
+[node name="ChaosBox" type="VBoxContainer" parent="MoodMeters"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Label" type="Label" parent="MoodMeters/ChaosBox"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 10
+text = "💥 CHAOS"
+
+[node name="Bar" type="ProgressBar" parent="MoodMeters/ChaosBox"]
+custom_minimum_size = Vector2(80, 10)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_styles/background = SubResource("StyleBoxFlat_mood_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_xp_fill")
+value = 30.0
+show_percentage = false
+
+[node name="BrainrotBox" type="VBoxContainer" parent="MoodMeters"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Label" type="Label" parent="MoodMeters/BrainrotBox"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 10
+text = "🤪 ROT"
+
+[node name="Bar" type="ProgressBar" parent="MoodMeters/BrainrotBox"]
+custom_minimum_size = Vector2(80, 10)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_styles/background = SubResource("StyleBoxFlat_mood_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_xp_fill")
+value = 80.0
+show_percentage = false
+
+[node name="ToastContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -280.0
+offset_top = -180.0
+offset_right = -15.0
+offset_bottom = -95.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_constants/separation = 6
+alignment = 2
 
 [node name="BottomNav" type="PanelContainer" parent="."]
 layout_mode = 1

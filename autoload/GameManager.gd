@@ -10,11 +10,21 @@ var tap_upgrade_level: int = 0
 var global_multiplier: float = 1.0
 var total_cps: float = 0.0
 
+# Player Level & XP
+var player_level: int = 1
+var player_xp: float = 0.0
+
+# Talking Tom Needs/Mood metrics
+var hype: float = 50.0
+var chaos: float = 30.0
+var brainrot: float = 80.0
+
 # Slots (3x3 grid, size 9)
 # Elements are String (character ID) or null
 var characters_in_slots: Array = [null, null, null, null, null, null, null, null, null]
 var characters_unlocked: Array[String] = []
 var characters_bought: Dictionary = {}
+
 
 # Upgrades & Boosts
 var upgrades: Dictionary = {
@@ -50,6 +60,12 @@ func _ready():
 	recalculate_cps()
 
 func _process(delta: float):
+	# Decay mood meters
+	hype = max(hype - 3.0 * delta, 0.0)
+	chaos = max(chaos - 2.5 * delta, 0.0)
+	brainrot = max(brainrot - 2.0 * delta, 0.0)
+	SignalBus.mood_changed.emit(hype, chaos, brainrot)
+
 	# Calculate and apply idle/passive income
 	var current_cps = total_cps
 	
@@ -68,6 +84,25 @@ func _process(delta: float):
 	var final_tick = (current_cps + auto_tap_cps) * delta
 	if final_tick > 0:
 		add_coins(final_tick)
+
+func get_xp_needed() -> float:
+	return 100.0 * pow(1.35, player_level - 1)
+
+func add_xp(amount: float):
+	player_xp += amount
+	var needed = get_xp_needed()
+	var leveled_up = false
+	while player_xp >= needed:
+		player_xp -= needed
+		player_level += 1
+		leveled_up = true
+		needed = get_xp_needed()
+	SignalBus.xp_changed.emit(player_xp, needed)
+	if leveled_up:
+		SignalBus.player_level_up.emit(player_level)
+		# Trigger toast notification for leveling up!
+		SignalBus.toast_notification.emit("🆙 LEVEL UP! Bạn đã đạt Cấp %d!!" % player_level)
+		SaveManager.save_game()
 
 func _initialize_default_state():
 	if characters_unlocked.is_empty():
@@ -142,6 +177,7 @@ func tap(pos: Vector2 = Vector2.ZERO):
 		coins_gained = tap_power * 10.0
 		
 	add_coins(coins_gained)
+	add_xp(1.0 + player_level * 0.1)
 	
 	# Emit signal to spawn particles & labels
 	SignalBus.tap_registered.emit(pos, is_critical, coins_gained)
@@ -197,6 +233,7 @@ func unlock_character(char_id: String, cost_override: float = -1.0) -> bool:
 		characters_unlocked.append(char_id)
 		
 	SignalBus.character_unlocked.emit(char_id)
+	add_xp(35.0)
 	recalculate_cps()
 	return true
 
@@ -227,6 +264,7 @@ func merge_slots(from_idx: int, to_idx: int) -> bool:
 		characters_unlocked.append(merge_result)
 		
 	SignalBus.character_merged.emit(char_from, merge_result)
+	add_xp(20.0)
 	recalculate_cps()
 	return true
 
@@ -253,6 +291,7 @@ func buy_upgrade(upgrade_id: String) -> bool:
 	
 	SignalBus.coins_changed.emit(coins)
 	SignalBus.upgrade_purchased.emit(upgrade_id, upgrades[upgrade_id])
+	add_xp(15.0)
 	
 	# Recalculate if it affects CPS (e.g. passive boosts)
 	recalculate_cps()

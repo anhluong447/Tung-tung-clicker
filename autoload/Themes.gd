@@ -136,6 +136,43 @@ func get_card_style(type: String) -> StyleBoxFlat:
 	_cache[key] = style
 	return style
 
+func get_rarity_card_style(rarity: int) -> StyleBoxFlat:
+	var key = "rarity_card_%d" % rarity
+	if _cache.has(key):
+		return _cache[key]
+		
+	var style = StyleBoxFlat.new()
+	style.corner_radius_top_left = 16
+	style.corner_radius_top_right = 16
+	style.corner_radius_bottom_right = 16
+	style.corner_radius_bottom_left = 16
+	
+	style.border_width_left = 3
+	style.border_width_top = 3
+	style.border_width_right = 3
+	style.border_width_bottom = 6
+	
+	# Common = 0 (green), Rare = 1 (blue), Epic = 2 (purple), Legendary = 3 (gold), Evolve = 4 (red)
+	match rarity:
+		0: # Common
+			style.bg_color = Color(0.12, 0.28, 0.16, 0.95)
+			style.border_color = Color(0.24, 0.76, 0.15)
+		1: # Uncommon
+			style.bg_color = Color(0.08, 0.22, 0.45, 0.95)
+			style.border_color = Color(0.1, 0.6, 1.0)
+		2: # Rare
+			style.bg_color = Color(0.25, 0.12, 0.44, 0.95)
+			style.border_color = Color(0.7, 0.25, 0.95)
+		3, 4: # Epic / Legendary
+			style.bg_color = Color(0.35, 0.22, 0.05, 0.95)
+			style.border_color = Color(1.0, 0.8, 0.1) # Shimmer Gold
+		_:
+			style.bg_color = Color(0.08, 0.08, 0.12, 0.95)
+			style.border_color = Color(0.5, 0.5, 0.5)
+			
+	_cache[key] = style
+	return style
+
 func get_ribbon_style(color_type: String) -> StyleBoxFlat:
 	var key = "ribbon_%s" % color_type
 	if _cache.has(key):

@@ -1,0 +1,62 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/ActiveCharacter.gd" id="1_active_char_script"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_main"]
+radius = 0.55
+height = 1.9
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_head"]
+radius = 0.48
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
+radius = 0.45
+height = 0.8
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_feet"]
+size = Vector3(0.9, 0.45, 0.9)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pedestal"]
+albedo_color = Color(0.1, 0.4, 0.8, 1)
+metallic = 0.3
+roughness = 0.3
+emission_enabled = true
+emission = Color(0.05, 0.2, 0.55, 1)
+emission_energy_multiplier = 0.8
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_pedestal"]
+top_radius = 1.2
+bottom_radius = 1.4
+height = 0.4
+
+[node name="ActiveCharacter" type="Node3D"]
+script = ExtResource("1_active_char_script")
+
+[node name="MeshPivot" type="Node3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MeshPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
+mesh = SubResource("CapsuleMesh_main")
+
+[node name="HeadArea" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HeadArea"]
+shape = SubResource("SphereShape3D_head")
+
+[node name="BodyArea" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BodyArea"]
+shape = SubResource("CapsuleShape3D_body")
+
+[node name="FeetArea" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FeetArea"]
+shape = SubResource("BoxShape3D_feet")
+
+[node name="Pedestal" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, 0)
+material_override = SubResource("StandardMaterial3D_pedestal")
+mesh = SubResource("CylinderMesh_pedestal")
